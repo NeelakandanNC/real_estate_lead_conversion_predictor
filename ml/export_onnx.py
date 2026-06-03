@@ -22,8 +22,11 @@ import priors
 from preprocessing import add_engineered, ENCODED_CSV, SEED
 from modelling import FEATURES
 
-ONNX_OUT = "../web/model/lead_scorer.onnx"
-META_OUT = "../web/model/meta.json"
+# NOTE: the website does NOT use ONNX (onnxruntime exceeds Vercel's 250 MB function
+# limit). The site scores with a dependency-free JS tree-walker from export_web_model.py.
+# This script stays as an optional, portable ONNX artifact written into ml/.
+ONNX_OUT = "lead_scorer.onnx"
+META_OUT = "onnx_meta.json"
 
 
 def main():

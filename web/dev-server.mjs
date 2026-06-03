@@ -15,12 +15,17 @@ const TYPES = { ".html": "text/html", ".css": "text/css", ".js": "text/javascrip
                 ".json": "application/json" };
 
 const server = http.createServer(async (req, res) => {
-  if (req.method === "POST" && req.url === "/api/score") {
+  if (req.url.split("?")[0] === "/api/score") {
+    if (req.method !== "POST") {
+      res.writeHead(405, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Use POST" }));
+      return;
+    }
     let body = "";
     req.on("data", (c) => (body += c));
-    req.on("end", async () => {
+    req.on("end", () => {
       try {
-        const out = await scoreLead(JSON.parse(body));
+        const out = scoreLead(JSON.parse(body || "{}"));
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(out));
       } catch (e) {

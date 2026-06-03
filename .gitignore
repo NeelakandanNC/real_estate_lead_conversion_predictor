@@ -30,3 +30,6 @@ node_modules/
 # --- Generated / large artifacts ---
 data_sources/extracted/*_img/
 data_sources/extracted/h1_2023_img/
+ml/selftest_predictions.json
+ml/lead_scorer.onnx
+ml/onnx_meta.json

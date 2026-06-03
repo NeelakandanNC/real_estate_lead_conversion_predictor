@@ -21,10 +21,17 @@ ANAROCK surveys ─► priors.py ─► generate_synthetic_data.py ─► leads_
                                                                      │
                                    modelling.py (LightGBM + calibration + lift)  ─► lead_scorer.pkl
                                                                      │
-                                          export_onnx.py  ─►  web/model/lead_scorer.onnx + meta.json
+                                       export_web_model.py  ─►  web/model/model.json (trees + calibration)
                                                                      │
                                    web/  (HTML/CSS/JS + serverless /api/score) ─► scores a lead
 ```
+
+The website scores leads with a **dependency-free JavaScript tree-walker** (a GBDT is just
+tree lookups + a sum). We don't ship an ML runtime to production — `onnxruntime` blows past
+Vercel's 250 MB function limit, so instead `export_web_model.py` dumps the LightGBM trees +
+isotonic curve to `model.json` and `api/score.js` evaluates them directly. The JS output is
+verified identical to Python (parity test in the export step). `export_onnx.py` remains as an
+optional, portable ONNX artifact, but the site does not use it.
 
 **Headline result:** ROC-AUC ≈ 0.76; calling the top 20% of the ranked list reaches
 ~50% of all buyers (2.5× better than random).
@@ -59,15 +66,15 @@ cd ml
 python generate_synthetic_data.py    # -> leads_synthetic.csv
 python preprocessing.py              # -> leads_encoded.csv, feature_ranking.csv
 python modelling.py                  # -> lead_scorer.pkl, figs/
-python export_onnx.py                # -> web/model/lead_scorer.onnx, meta.json
+python export_web_model.py           # -> web/model/model.json  (what the site uses)
+python export_onnx.py                # optional: ml/lead_scorer.onnx (portable artifact)
 ```
 
 ## Run the website locally
 
 ```bash
 cd web
-npm install
-npm run dev          # open http://localhost:3000
+node dev-server.mjs        # open http://localhost:3000   (no npm install needed)
 ```
 
 ## Deploy to Vercel
@@ -75,6 +82,6 @@ npm run dev          # open http://localhost:3000
 Point Vercel at this repo and set **Root Directory = `web`**, then deploy.
 
 `web/vercel.json` declares the build explicitly (`builds` + `routes`), so Vercel skips
-framework auto-detection and just does: `public/` → static site, `api/score.js` → a
-Node serverless function (with the ONNX model bundled via `includeFiles`). No Python
-runs in production — inference is pure ONNX in Node.
+framework auto-detection and does: `public/` → static site, `api/score.js` → a Node
+serverless function with `model/model.json` bundled. The function has **no npm
+dependencies** (pure-JS tree-walker), so it stays tiny — no size-limit or runtime issues.
