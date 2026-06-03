@@ -72,6 +72,9 @@ npm run dev          # open http://localhost:3000
 
 ## Deploy to Vercel
 
-Point Vercel at this repo and set **Root Directory = `web`**. The static files are
-served as-is and `api/score.js` becomes a serverless function; `vercel.json` bundles
-the model with it. No Python runs in production — inference is pure ONNX in Node.
+Point Vercel at this repo and set **Root Directory = `web`**, then deploy.
+
+`web/vercel.json` declares the build explicitly (`builds` + `routes`), so Vercel skips
+framework auto-detection and just does: `public/` → static site, `api/score.js` → a
+Node serverless function (with the ONNX model bundled via `includeFiles`). No Python
+runs in production — inference is pure ONNX in Node.
