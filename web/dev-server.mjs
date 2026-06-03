@@ -30,9 +30,9 @@ const server = http.createServer(async (req, res) => {
     });
     return;
   }
-  // static files
+  // static files (served from public/, same as Vercel does)
   const file = req.url === "/" ? "/index.html" : req.url.split("?")[0];
-  const fp = path.join(__dirname, file);
+  const fp = path.join(__dirname, "public", file);
   if (fs.existsSync(fp) && fs.statSync(fp).isFile()) {
     res.writeHead(200, { "Content-Type": TYPES[path.extname(fp)] || "text/plain" });
     fs.createReadStream(fp).pipe(res);
