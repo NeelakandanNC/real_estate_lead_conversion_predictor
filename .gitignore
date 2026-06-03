@@ -23,6 +23,10 @@ env/
 CLAUDE.md
 .claude/
 
+# --- Node / Vercel (web/) ---
+node_modules/
+.vercel/
+
 # --- Generated / large artifacts ---
-extracted/*_img/
-extracted/h1_2023_img/
+data_sources/extracted/*_img/
+data_sources/extracted/h1_2023_img/

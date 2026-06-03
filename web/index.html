@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real estate lead predictor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">Real estate lead predictor</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Call the buyers, not the whole list.</h1>
+      <p>
+        Thousands of enquiries come in, only a handful actually buy. EstateIQ scores
+        every caller by their likelihood to convert, so your sales team follows up the
+        right leads first.
+      </p>
+    </div>
+  </section>
+
+  <main id="tool" class="panel">
+    <form id="lead-form" class="card form-card">
+      <h2>Lead profiler</h2>
+      <p class="sub">Enter what the caller told you on the phone.</p>
+
+      <label>Annual household income <span class="unit">₹ Lakh</span>
+        <input type="number" name="income_l" value="18" min="3" max="300" step="1" required />
+      </label>
+      <label>Stated budget <span class="unit">₹ Lakh</span>
+        <input type="number" name="budget_l" value="90" min="20" max="1500" step="5" required />
+      </label>
+      <label>Flat price / ticket <span class="unit">₹ Lakh</span>
+        <input type="number" name="price_l" value="85" min="20" max="1500" step="5" required />
+      </label>
+
+      <div class="row">
+        <label>Preferred BHK
+          <select name="bhk_pref">
+            <option>1BHK</option><option>2BHK</option>
+            <option selected>3BHK</option><option>4BHK+</option>
+          </select>
+        </label>
+        <label>BHK enquired
+          <select name="bhk_enq">
+            <option>1BHK</option><option>2BHK</option>
+            <option selected>3BHK</option><option>4BHK+</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Buying intent
+        <select name="intent">
+          <option value="end_use" selected>End-use (self use)</option>
+          <option value="investment">Investment</option>
+        </select>
+      </label>
+
+      <button type="submit">Score this lead</button>
+    </form>
+
+    <div class="card result-card" id="result">
+      <div class="placeholder">Fill the form and hit <em>Score this lead</em> to see the result.</div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
